@@ -1,0 +1,21 @@
+Package: eth
+Type: Package
+Title: Interact with Ethereum
+Version: 0.1.0.9000
+Authors@R: as.person(c("dApped <dapped@protonmail.com> [aut, cre]"))
+Description: Tools for exploring Ethereum transactions and 
+    interacting with Ethereum contracts.
+Depends:
+    R (>= 3.0.1)
+Imports:
+    methods,
+    utils,
+    V8,
+    dplyr,
+    jsonlite
+SystemRequirements: 
+    javascript
+Encoding: UTF-8    
+License: GPL-3
+LazyData: true
+RoxygenNote: 6.1.0
