@@ -50,6 +50,7 @@
 #' @details \code{get_txs} uses the Etherscan API to source information about
 #'   transactions to and from an Ethereum address. Register for an API key at
 #'   the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
+#'   Note that a maximum of 10000 transactions are returned.
 #' @section Warning:
 #' As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs are
 #' provided as a community service and without warranty, so please just use what

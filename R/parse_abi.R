@@ -24,7 +24,7 @@
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
 #' @seealso \code{\link{get_abi}} \code{\link{keccak256}}
 #' @importFrom jsonlite fromJSON prettify
-#' @importFrom dplyr %>% bind_rows mutate select
+#' @importFrom dplyr %>% bind_rows mutate select one_of
 #' @export
 parse_abi <- function(abi) {
   if(!inherits(abi, 'abi'))
@@ -37,14 +37,15 @@ parse_abi <- function(abi) {
     output_name=sapply(methods$outputs, function(x) paste(x$name, collapse=',')),
     output_type=sapply(methods$outputs, function(x) paste(x$type, collapse=','))
   ) %>%
-    dplyr::bind_rows
-  cbind(methods, inputs) %>%
-    dplyr::select_(
-      .dots, c('constant', 'name', 'input_indexed:output_type',
-               'payable:anonymous')) %>%
+    dplyr::bind_rows()
+  suppressWarnings(cbind(methods, inputs) %>%
+    dplyr::select(dplyr::one_of(
+      c('constant', 'name', 'input_indexed', 'input_name',
+        'input_type', 'output_name', 'output_type',
+        'payable', 'stateMutability', 'type', 'anonymous')))) %>%
     dplyr::mutate_(
       signature= ~ ifelse(is.na(name), NA, sprintf('%s(%s)', name, input_type)),
       method= ~ unname(keccak256(signature))) %>%
     lapply(function(x) ifelse(nchar(x)==0, NA, x)) %>%
-    dplyr::bind_rows
+    dplyr::bind_rows()
 }
