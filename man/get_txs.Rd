@@ -65,6 +65,7 @@ Get normal or internal transactions for an Ethereum address.
 \code{get_txs} uses the Etherscan API to source information about
   transactions to and from an Ethereum address. Register for an API key at
   the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
+  Note that a maximum of 10000 transactions are returned.
 }
 \section{Warning}{
 
