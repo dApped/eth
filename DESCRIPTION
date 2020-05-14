@@ -1,8 +1,8 @@
 Package: eth
 Type: Package
 Title: Interact with Ethereum
-Version: 0.1.3.9000
-Authors@R: as.person(c("dApped <dapped@protonmail.com> [aut, cre]"))
+Version: 0.1.4.9000
+Authors@R: as.person(c("dapped <dapped@protonmail.com> [aut, cre]"))
 Description: Tools for exploring Ethereum transactions and 
     interacting with Ethereum contracts.
 Depends:
@@ -12,7 +12,10 @@ Imports:
     utils,
     V8,
     dplyr,
-    jsonlite
+    jsonlite,
+    rvest,
+    stats,
+    xml2
 SystemRequirements: 
     javascript
 Encoding: UTF-8  
