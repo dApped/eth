@@ -3,7 +3,6 @@
 \docType{package}
 \name{eth}
 \alias{eth}
-\alias{eth-package}
 \title{eth: Tools to Explore the Ethereum Blockchain}
 \description{
 Tools to explore the Ethereum blockchain.

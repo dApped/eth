@@ -4,7 +4,13 @@
 \alias{get_txs}
 \title{Get transactions for an address}
 \usage{
-get_txs(address, api_key, internal = FALSE, no_errors = TRUE)
+get_txs(
+  address,
+  api_key,
+  internal = FALSE,
+  network = "mainnet",
+  no_errors = TRUE
+)
 }
 \arguments{
 \item{address}{Character. A single ethereum address as a character string (40
@@ -14,6 +20,9 @@ hexadecimal characters prepended by '0x').}
 
 \item{internal}{Logical. Should normal (\code{FALSE}, default) or internal
 (\code{TRUE}) transactions be queried?}
+
+\item{network}{Ethereum network to use. One of \code{'mainnet'} (default),
+\code{ropsten}, \code{rinkeby}, \code{kovan}, or \code{goerli}.}
 
 \item{no_errors}{Logical. Should unsuccessful transactions be omitted
 (\code{FALSE}, default)?}

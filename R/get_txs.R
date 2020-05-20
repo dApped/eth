@@ -4,9 +4,11 @@
 #'
 #' @param address Character. A single ethereum address as a character string (40
 #'   hexadecimal characters prepended by '0x').
+#' @param api_key An Etherscan API key (see Details).
 #' @param internal Logical. Should normal (\code{FALSE}, default) or internal
 #'   (\code{TRUE}) transactions be queried?
-#' @param api_key An Etherscan API key (see Details).
+#' @param network Ethereum network to use. One of \code{'mainnet'} (default),
+#'   \code{ropsten}, \code{rinkeby}, \code{kovan}, or \code{goerli}.
 #' @param no_errors Logical. Should unsuccessful transactions be omitted
 #'   (\code{FALSE}, default)?
 #' @return If \code{internal} is \code{FALSE}, a \code{tbl_df} with the
@@ -60,12 +62,15 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr filter as.tbl mutate %>%
 #' @export
-get_txs <- function(address, api_key, internal=FALSE, no_errors=TRUE) {
+get_txs <- function(address, api_key, internal=FALSE, network='mainnet',
+                    no_errors=TRUE) {
   address <- tolower(address)
   if(missing(api_key)) api_key <- ''
+  network <- match.arg(network, c('mainnet', 'ropsten', 'rinkeby', 'kovan', 'goerli'))
+  network <- ifelse(network=='mainnet', '', paste0('-', network))
   j <- jsonlite::fromJSON(sprintf(
-    'http://api.etherscan.io/api?module=account&action=txlist%s&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s',
-    ifelse(isTRUE(internal), 'internal', ''), address, api_key))
+    'http://api%s.etherscan.io/api?module=account&action=txlist%s&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s',
+    network, ifelse(isTRUE(internal), 'internal', ''), address, api_key))
   if(j$status != '1') {
     stop('Invalid address', call. = FALSE)
   }

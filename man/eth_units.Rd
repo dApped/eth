@@ -4,10 +4,12 @@
 \name{eth_units}
 \alias{eth_units}
 \title{Ether units}
-\format{A \code{tbl_df} with two columns: \itemize{
+\format{
+A \code{tbl_df} with two columns: \itemize{
   \item{\code{unit}}{: name of the unit}
   \item{\code{value_wei}}{: value of the unit in wei}
-}}
+}
+}
 \source{
 \url{https://web3js.readthedocs.io/en/1.0/web3-utils.html#return-value}
 }
