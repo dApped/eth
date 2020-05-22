@@ -13,44 +13,8 @@
 #'   `'ropsten'`, `'rinkeby'`, `'kovan'`, or `'goerli'`.
 #' @param no_errors Logical. Should unsuccessful transactions be omitted
 #'   (`FALSE`, default)?
-#' @return If `internal` is `FALSE`, a `tbl_df` with the
-#'   following elements:
-#'  \itemize{
-#'    \item{`blockNumber (<dbl>)`}{}
-#'    \item{`timeStamp (<dttm>)`}{}
-#'    \item{`hash (<chr>)`}{}
-#'    \item{`nonce (<dbl>)`}{}
-#'    \item{`blockHash (<chr>)`}{}
-#'    \item{`transactionIndex (<dbl>)`}{}
-#'    \item{`from (<chr>)`}{}
-#'    \item{`to (<chr>)`}{}
-#'    \item{`value (<dbl>)`}{}
-#'    \item{`gas (<dbl>)`}{}
-#'    \item{`gasPrice (<dbl>)`}{}
-#'    \item{`isError (<dbl>)`}{}
-#'    \item{`txreceipt_status (<chr>)`}{}
-#'    \item{`input (<chr>)`}{}
-#'    \item{`contractAddress (<chr>)`}{}
-#'  }
-#'  If `internal` is `TRUE`, a `tbl_df` with the following
-#'  elements:
-#'  \itemize{
-#'    \item{`blockNumber (<dbl>)`}{}
-#'    \item{`timeStamp (<dttm>)`}{}
-#'    \item{`hash (<chr>)`}{}
-#'    \item{`from (<chr>)`}{}
-#'    \item{`to (<chr>)`}{}
-#'    \item{`value (<dbl>)`}{}
-#'    \item{`contractAddress (<chr>)`}{}
-#'    \item{`input (<chr>)`}{}
-#'    \item{`type (<chr>)`}{}
-#'    \item{`gas (<dbl>)`}{}
-#'    \item{`gasUsed (<dbl>)`}{}
-#'    \item{`traceId (<dbl>)`}{}
-#'    \item{`isError (<dbl>)`}{}
-#'    \item{`errCode (<chr>)`}{}
-#'    \item{`value_eth (<dbl>)`}{}
-#' }
+#' @return A `tbl_df` with transaction details. Columns vary depending on
+#'   `type`.
 #' @details `get_txs` uses the Etherscan API to source information about
 #'   transactions to and from an Ethereum address. Register for an API key at
 #'   the [Etherscan Developer APIs page](https://etherscan.io/apis).

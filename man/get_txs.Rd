@@ -32,44 +32,8 @@ hexadecimal characters prepended by '0x').}
 (\code{FALSE}, default)?}
 }
 \value{
-If \code{internal} is \code{FALSE}, a \code{tbl_df} with the
-following elements:
-\itemize{
-\item{\verb{blockNumber (<dbl>)}}{}
-\item{\verb{timeStamp (<dttm>)}}{}
-\item{\verb{hash (<chr>)}}{}
-\item{\verb{nonce (<dbl>)}}{}
-\item{\verb{blockHash (<chr>)}}{}
-\item{\verb{transactionIndex (<dbl>)}}{}
-\item{\verb{from (<chr>)}}{}
-\item{\verb{to (<chr>)}}{}
-\item{\verb{value (<dbl>)}}{}
-\item{\verb{gas (<dbl>)}}{}
-\item{\verb{gasPrice (<dbl>)}}{}
-\item{\verb{isError (<dbl>)}}{}
-\item{\verb{txreceipt_status (<chr>)}}{}
-\item{\verb{input (<chr>)}}{}
-\item{\verb{contractAddress (<chr>)}}{}
-}
-If \code{internal} is \code{TRUE}, a \code{tbl_df} with the following
-elements:
-\itemize{
-\item{\verb{blockNumber (<dbl>)}}{}
-\item{\verb{timeStamp (<dttm>)}}{}
-\item{\verb{hash (<chr>)}}{}
-\item{\verb{from (<chr>)}}{}
-\item{\verb{to (<chr>)}}{}
-\item{\verb{value (<dbl>)}}{}
-\item{\verb{contractAddress (<chr>)}}{}
-\item{\verb{input (<chr>)}}{}
-\item{\verb{type (<chr>)}}{}
-\item{\verb{gas (<dbl>)}}{}
-\item{\verb{gasUsed (<dbl>)}}{}
-\item{\verb{traceId (<dbl>)}}{}
-\item{\verb{isError (<dbl>)}}{}
-\item{\verb{errCode (<chr>)}}{}
-\item{\verb{value_eth (<dbl>)}}{}
-}
+A \code{tbl_df} with transaction details. Columns vary depending on
+\code{type}.
 }
 \description{
 Get normal, internal, ERC-20, or ERC-721 transactions for an Ethereum address.
