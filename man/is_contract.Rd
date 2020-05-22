@@ -21,15 +21,14 @@ address.
 }
 \details{
 \code{is_contract} uses the Etherscan API. Register for an API key
-  at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs
-  page}}.
+at the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
 }
 \section{Warning}{
 
-As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs are
-provided as a community service and without warranty, so please just use what
-you need and no more. They support both GET/POST requests and a rate limit of
-5 requests/sec.}
+As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs
+are provided as a community service and without warranty, so please just use
+what you need and no more. They support both GET/POST requests and a rate
+limit of 5 requests/sec.}
 }
 
 \keyword{ETH}

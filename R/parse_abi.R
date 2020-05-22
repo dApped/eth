@@ -1,28 +1,28 @@
 #' Parse an ABI
 #'
-#' Parse an \code{abi} object returned by \code{\link{get_abi}}.
+#' Parse an `abi` object returned by [get_abi()].
 #'
-#' @param abi An \code{abi} object returned by \code{\link{get_abi}}.
-#' @return A \code{tbl_df} with the following columns:
+#' @param abi An `abi` object returned by [get_abi()].
+#' @return A `tbl_df` with the following columns:
 #'   \itemize{
-#'     \item{\code{constant (<lgl>)}}{}
-#'     \item{\code{name (<chr>)}}{}
-#'     \item{\code{input_indexed (<chr>)}}{}
-#'     \item{\code{input_name (<chr>)}}{}
-#'     \item{\code{input_type (<chr>)}}{}
-#'     \item{\code{output_name (<chr>)}}{}
-#'     \item{\code{output_type (<chr>)}}{}
-#'     \item{\code{payable (<lgl>)}}{}
-#'     \item{\code{stateMutability (<chr>)}}{}
-#'     \item{\code{type (<chr>)}}{}
-#'     \item{\code{anonymous (<lgl>)}}{}
-#'     \item{\code{signature (<chr>)}}{}
-#'     \item{\code{method (<chr>)}}{}
+#'     \item{`constant (<lgl>)`}{}
+#'     \item{`name (<chr>)`}{}
+#'     \item{`input_indexed (<chr>)`}{}
+#'     \item{`input_name (<chr>)`}{}
+#'     \item{`input_type (<chr>)`}{}
+#'     \item{`output_name (<chr>)`}{}
+#'     \item{`output_type (<chr>)`}{}
+#'     \item{`payable (<lgl>)`}{}
+#'     \item{`stateMutability (<chr>)`}{}
+#'     \item{`type (<chr>)`}{}
+#'     \item{`anonymous (<lgl>)`}{}
+#'     \item{`signature (<chr>)`}{}
+#'     \item{`method (<chr>)`}{}
 #'   }
-#' @details The values given in the \code{method} column are the first 8
+#' @details The values given in the `method` column are the first 8
 #'   characters (4 bytes) of the keccak256 hashes of the method signatures.
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
-#' @seealso \code{\link{get_abi}} \code{\link{keccak256}}
+#' @seealso [get_abi()] [keccak256()]
 #' @importFrom jsonlite fromJSON prettify
 #' @importFrom dplyr %>% bind_rows mutate select one_of
 #' @export

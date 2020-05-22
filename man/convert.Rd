@@ -10,10 +10,10 @@ convert(x, from = "wei", to)
 \item{x}{Numeric. A vector giving values to be converted.}
 
 \item{from}{Character. The units of Ether in which \code{x} is given. See
-\code{\link{eth_units}} for valid values. Default is \code{'wei'}.}
+\code{\link[=eth_units]{eth_units()}} for valid values. Default is \code{'wei'}.}
 
 \item{to}{Character. The target unit of Ether to which \code{x} will be
-converted. See \code{\link{eth_units}} for valid values.}
+converted. See \code{\link[=eth_units]{eth_units()}} for valid values.}
 }
 \value{
 A vector giving \code{x} in units specified by \code{to}.
@@ -22,7 +22,7 @@ A vector giving \code{x} in units specified by \code{to}.
 Convert between Ether units.
 }
 \seealso{
-\code{\link{eth_units}}
+\code{\link[=eth_units]{eth_units()}}
 }
 \keyword{ETH}
 \keyword{Ethereum,}

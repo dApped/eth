@@ -5,15 +5,14 @@
 #' @param address Character. A single ethereum contract address as a character
 #'   string (40 hexadecimal characters prepended by '0x').
 #' @param api_key An Etherscan API key (see Details).
-#' @return Character. The address that created the contract at \code{address}.
-#' @details \code{creator} uses the Etherscan API. Register for an API key
-#'   at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs
-#'   page}}.
+#' @return Character. The address that created the contract at `address`.
+#' @details `creator` uses the Etherscan API. Register for an API key
+#'   at the [_Etherscan Developer APIs_ page](https://etherscan.io/apis).
 #' @section Warning:
-#' As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs are
+#' As per the Etherscan documentation, _the Etherscan Ethereum Developer APIs are
 #' provided as a community service and without warranty, so please just use what
 #' you need and no more. They support both GET/POST requests and a rate limit of
-#' 5 requests/sec.}
+#' 5 requests/sec._
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
 #' @importFrom jsonlite fromJSON
 #' @export

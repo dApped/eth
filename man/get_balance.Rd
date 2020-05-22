@@ -14,7 +14,7 @@ hexadecimal characters prepended by '0x').}
 }
 \value{
 A numeric vector of balances (in ether units) corresponding to the
-  elements of \code{address}.
+elements of \code{address}.
 }
 \description{
 Get normal or internal transactions for an Ethereum address.

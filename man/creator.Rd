@@ -20,8 +20,7 @@ Return the Ethereum address of the creator of a contract.
 }
 \details{
 \code{creator} uses the Etherscan API. Register for an API key
-  at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs
-  page}}.
+at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs} page}.
 }
 \section{Warning}{
 

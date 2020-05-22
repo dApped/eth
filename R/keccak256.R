@@ -3,9 +3,10 @@
 #' Hash a string with Keccak-256.
 #'
 #' @param x Character. The string to hash.
-#' @param truncate Logical. Truncate the hash to the first 4 bytes (8 characters)?
-#' @return Character. The hash of \code{x}, truncated to 8 characters if
-#'   \code{truncate} is \code{TRUE}.
+#' @param truncate Logical. Truncate the hash to the first 4 bytes (8
+#'   characters)?
+#' @return Character. The hash of `x`, truncated to 8 characters if
+#'   `truncate` is `TRUE`.
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
 #' @references Uses a local copy of
 #'   \href{https://github.com/emn178/js-sha3}{sha3.min.js (v0.8.0)} by Yi-Cyuan

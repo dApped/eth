@@ -8,6 +8,7 @@ get_txs(
   address,
   api_key,
   internal = FALSE,
+  type = c("normal", "internal", "ERC20", "ERC721"),
   network = "mainnet",
   no_errors = TRUE
 )
@@ -19,69 +20,72 @@ hexadecimal characters prepended by '0x').}
 \item{api_key}{An Etherscan API key (see Details).}
 
 \item{internal}{Logical. Should normal (\code{FALSE}, default) or internal
-(\code{TRUE}) transactions be queried?}
+(\code{TRUE}) transactions be queried? \emph{Deprecated. Please use \code{type} instead.}}
+
+\item{type}{The type of transaction to query. One of \code{'normal'},
+\code{'internal'}, \code{'ERC20'}, or \code{'ERC721'}.}
 
 \item{network}{Ethereum network to use. One of \code{'mainnet'} (default),
-\code{ropsten}, \code{rinkeby}, \code{kovan}, or \code{goerli}.}
+\code{'ropsten'}, \code{'rinkeby'}, \code{'kovan'}, or \code{'goerli'}.}
 
 \item{no_errors}{Logical. Should unsuccessful transactions be omitted
 (\code{FALSE}, default)?}
 }
 \value{
 If \code{internal} is \code{FALSE}, a \code{tbl_df} with the
-  following elements:
- \itemize{
-   \item{\code{blockNumber (<dbl>)}}{}
-   \item{\code{timeStamp (<dttm>)}}{}
-   \item{\code{hash (<chr>)}}{}
-   \item{\code{nonce (<dbl>)}}{}
-   \item{\code{blockHash (<chr>)}}{}
-   \item{\code{transactionIndex (<dbl>)}}{}
-   \item{\code{from (<chr>)}}{}
-   \item{\code{to (<chr>)}}{}
-   \item{\code{value (<dbl>)}}{}
-   \item{\code{gas (<dbl>)}}{}
-   \item{\code{gasPrice (<dbl>)}}{}
-   \item{\code{isError (<dbl>)}}{}
-   \item{\code{txreceipt_status (<chr>)}}{}
-   \item{\code{input (<chr>)}}{}
-   \item{\code{contractAddress (<chr>)}}{}
- }
- If \code{internal} is \code{TRUE}, a \code{tbl_df} with the following
- elements:
- \itemize{
-   \item{\code{blockNumber (<dbl>)}}{}
-   \item{\code{timeStamp (<dttm>)}}{}
-   \item{\code{hash (<chr>)}}{}
-   \item{\code{from (<chr>)}}{}
-   \item{\code{to (<chr>)}}{}
-   \item{\code{value (<dbl>)}}{}
-   \item{\code{contractAddress (<chr>)}}{}
-   \item{\code{input (<chr>)}}{}
-   \item{\code{type (<chr>)}}{}
-   \item{\code{gas (<dbl>)}}{}
-   \item{\code{gasUsed (<dbl>)}}{}
-   \item{\code{traceId (<dbl>)}}{}
-   \item{\code{isError (<dbl>)}}{}
-   \item{\code{errCode (<chr>)}}{}
-   \item{\code{value_eth (<dbl>)}}{}
+following elements:
+\itemize{
+\item{\verb{blockNumber (<dbl>)}}{}
+\item{\verb{timeStamp (<dttm>)}}{}
+\item{\verb{hash (<chr>)}}{}
+\item{\verb{nonce (<dbl>)}}{}
+\item{\verb{blockHash (<chr>)}}{}
+\item{\verb{transactionIndex (<dbl>)}}{}
+\item{\verb{from (<chr>)}}{}
+\item{\verb{to (<chr>)}}{}
+\item{\verb{value (<dbl>)}}{}
+\item{\verb{gas (<dbl>)}}{}
+\item{\verb{gasPrice (<dbl>)}}{}
+\item{\verb{isError (<dbl>)}}{}
+\item{\verb{txreceipt_status (<chr>)}}{}
+\item{\verb{input (<chr>)}}{}
+\item{\verb{contractAddress (<chr>)}}{}
+}
+If \code{internal} is \code{TRUE}, a \code{tbl_df} with the following
+elements:
+\itemize{
+\item{\verb{blockNumber (<dbl>)}}{}
+\item{\verb{timeStamp (<dttm>)}}{}
+\item{\verb{hash (<chr>)}}{}
+\item{\verb{from (<chr>)}}{}
+\item{\verb{to (<chr>)}}{}
+\item{\verb{value (<dbl>)}}{}
+\item{\verb{contractAddress (<chr>)}}{}
+\item{\verb{input (<chr>)}}{}
+\item{\verb{type (<chr>)}}{}
+\item{\verb{gas (<dbl>)}}{}
+\item{\verb{gasUsed (<dbl>)}}{}
+\item{\verb{traceId (<dbl>)}}{}
+\item{\verb{isError (<dbl>)}}{}
+\item{\verb{errCode (<chr>)}}{}
+\item{\verb{value_eth (<dbl>)}}{}
 }
 }
 \description{
-Get normal or internal transactions for an Ethereum address.
+Get normal, internal, ERC-20, or ERC-721 transactions for an Ethereum address.
 }
 \details{
 \code{get_txs} uses the Etherscan API to source information about
-  transactions to and from an Ethereum address. Register for an API key at
-  the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
-  Note that a maximum of 10000 transactions are returned.
+transactions to and from an Ethereum address. Register for an API key at
+the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
+Note that a maximum of 10000 transactions are returned.
 }
 \section{Warning}{
 
-As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs are
-provided as a community service and without warranty, so please just use what
-you need and no more. They support both GET/POST requests and a rate limit of
-5 requests/sec.}
+As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs
+are provided as a community service and without warranty, so please just use
+what you need and no more. They support both GET/POST requests and a rate
+limit of 5 requests/sec.}
 }
 
 \keyword{ETH}

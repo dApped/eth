@@ -14,15 +14,14 @@ string (40 hexadecimal characters prepended by '0x').}
 }
 \value{
 An \code{abi} object (inherits \code{json}) giving the ABI of the
-  contract.
+contract.
 }
 \description{
 Check whether a contract has been verified by Etherscan.
 }
 \details{
 \code{get_abi} uses the Etherscan API. Register for an API key
-  at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs
-  page}}.
+at the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
 }
 \section{Warning}{
 
@@ -33,7 +32,7 @@ limit of 5 requests/sec.}
 }
 
 \seealso{
-\code{\link{parse_abi}}
+\code{\link[=parse_abi]{parse_abi()}}
 }
 \keyword{ETH}
 \keyword{Ethereum,}

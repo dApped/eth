@@ -3,13 +3,13 @@
 #' Convert between Ether units.
 #'
 #' @param x Numeric. A vector giving values to be converted.
-#' @param from Character. The units of Ether in which \code{x} is given. See
-#'   \code{\link{eth_units}} for valid values. Default is \code{'wei'}.
-#' @param to Character. The target unit of Ether to which \code{x} will be
-#'   converted. See \code{\link{eth_units}} for valid values.
-#' @return A vector giving \code{x} in units specified by \code{to}.
+#' @param from Character. The units of Ether in which `x` is given. See
+#'   [eth_units()] for valid values. Default is `'wei'`.
+#' @param to Character. The target unit of Ether to which `x` will be
+#'   converted. See [eth_units()] for valid values.
+#' @return A vector giving `x` in units specified by `to`.
 #' @keywords Ethereum, units, currency, ETH
-#' @seealso \code{\link{eth_units}}
+#' @seealso [eth_units()]
 #' @importFrom dplyr %>%
 #' @importFrom stats setNames
 #' @export

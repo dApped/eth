@@ -9,19 +9,20 @@ keccak256(x, truncate = TRUE)
 \arguments{
 \item{x}{Character. The string to hash.}
 
-\item{truncate}{Logical. Truncate the hash to the first 4 bytes (8 characters)?}
+\item{truncate}{Logical. Truncate the hash to the first 4 bytes (8
+characters)?}
 }
 \value{
 Character. The hash of \code{x}, truncated to 8 characters if
-  \code{truncate} is \code{TRUE}.
+\code{truncate} is \code{TRUE}.
 }
 \description{
 Hash a string with Keccak-256.
 }
 \references{
 Uses a local copy of
-  \href{https://github.com/emn178/js-sha3}{sha3.min.js (v0.8.0)} by Yi-Cyuan
-  Chen. This is licensed under MIT.
+\href{https://github.com/emn178/js-sha3}{sha3.min.js (v0.8.0)} by Yi-Cyuan
+Chen. This is licensed under MIT.
 }
 \keyword{ETH}
 \keyword{Ethereum,}

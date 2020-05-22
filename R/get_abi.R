@@ -5,18 +5,17 @@
 #' @param address Character. A single ethereum contract address as a character
 #'   string (40 hexadecimal characters prepended by '0x').
 #' @param api_key An Etherscan API key (see Details).
-#' @return An \code{abi} object (inherits \code{json}) giving the ABI of the
+#' @return An `abi` object (inherits `json`) giving the ABI of the
 #'   contract.
-#' @details \code{get_abi} uses the Etherscan API. Register for an API key
-#'   at the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs
-#'   page}}.
+#' @details `get_abi` uses the Etherscan API. Register for an API key
+#'   at the [Etherscan Developer APIs page](https://etherscan.io/apis).
 #' @section Warning:
-#' As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer
+#' As per the Etherscan documentation, _the Etherscan Ethereum Developer
 #' APIs are provided as a community service and without warranty, so please just
 #' use what you need and no more. They support both GET/POST requests and a rate
-#' limit of 5 requests/sec.}
+#' limit of 5 requests/sec._
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
-#' @seealso \code{\link{parse_abi}}
+#' @seealso [parse_abi()]
 #' @importFrom jsonlite prettify
 #' @export
 get_abi <- function(address, api_key) {

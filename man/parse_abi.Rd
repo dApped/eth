@@ -7,35 +7,35 @@
 parse_abi(abi)
 }
 \arguments{
-\item{abi}{An \code{abi} object returned by \code{\link{get_abi}}.}
+\item{abi}{An \code{abi} object returned by \code{\link[=get_abi]{get_abi()}}.}
 }
 \value{
 A \code{tbl_df} with the following columns:
-  \itemize{
-    \item{\code{constant (<lgl>)}}{}
-    \item{\code{name (<chr>)}}{}
-    \item{\code{input_indexed (<chr>)}}{}
-    \item{\code{input_name (<chr>)}}{}
-    \item{\code{input_type (<chr>)}}{}
-    \item{\code{output_name (<chr>)}}{}
-    \item{\code{output_type (<chr>)}}{}
-    \item{\code{payable (<lgl>)}}{}
-    \item{\code{stateMutability (<chr>)}}{}
-    \item{\code{type (<chr>)}}{}
-    \item{\code{anonymous (<lgl>)}}{}
-    \item{\code{signature (<chr>)}}{}
-    \item{\code{method (<chr>)}}{}
-  }
+\itemize{
+\item{\verb{constant (<lgl>)}}{}
+\item{\verb{name (<chr>)}}{}
+\item{\verb{input_indexed (<chr>)}}{}
+\item{\verb{input_name (<chr>)}}{}
+\item{\verb{input_type (<chr>)}}{}
+\item{\verb{output_name (<chr>)}}{}
+\item{\verb{output_type (<chr>)}}{}
+\item{\verb{payable (<lgl>)}}{}
+\item{\verb{stateMutability (<chr>)}}{}
+\item{\verb{type (<chr>)}}{}
+\item{\verb{anonymous (<lgl>)}}{}
+\item{\verb{signature (<chr>)}}{}
+\item{\verb{method (<chr>)}}{}
+}
 }
 \description{
-Parse an \code{abi} object returned by \code{\link{get_abi}}.
+Parse an \code{abi} object returned by \code{\link[=get_abi]{get_abi()}}.
 }
 \details{
 The values given in the \code{method} column are the first 8
-  characters (4 bytes) of the keccak256 hashes of the method signatures.
+characters (4 bytes) of the keccak256 hashes of the method signatures.
 }
 \seealso{
-\code{\link{get_abi}} \code{\link{keccak256}}
+\code{\link[=get_abi]{get_abi()}} \code{\link[=keccak256]{keccak256()}}
 }
 \keyword{ETH}
 \keyword{Ethereum,}

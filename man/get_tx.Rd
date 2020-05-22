@@ -13,18 +13,18 @@ get_tx(tx, api_key)
 \item{api_key}{An Etherscan API key (see Details).}
 }
 \value{
-A \code{data.frame} with one row per element of \code{tx}, with 
-  columns: \code{blockHash}, \code{blockNumber}, \code{from}, \code{gas}, 
-  \code{gasPrice}, \code{hash}, \code{input}, \code{nonce}, \code{to}, 
-  \code{transactionIndex}, \code{value}, \code{v}, \code{r}, \code{s}.
+A \code{data.frame} with one row per element of \code{tx}, with
+columns: \code{blockHash}, \code{blockNumber}, \code{from}, \code{gas},
+\code{gasPrice}, \code{hash}, \code{input}, \code{nonce}, \code{to},
+\code{transactionIndex}, \code{value}, \code{v}, \code{r}, \code{s}.
 }
 \description{
-get_tx
+Get details of one or more transactions by hash.
 }
 \details{
 \code{get_tx} uses the Etherscan API to source information about
-  transactions to and from an Ethereum address. Register for an API key at
-  the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
+transactions to and from an Ethereum address. Register for an API key at
+the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
 }
 \section{Warning}{
 

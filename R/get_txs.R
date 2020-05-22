@@ -1,110 +1,166 @@
 #' Get transactions for an address
 #'
-#' Get normal or internal transactions for an Ethereum address.
+#' Get normal, internal, ERC-20, or ERC-721 transactions for an Ethereum address.
 #'
 #' @param address Character. A single ethereum address as a character string (40
 #'   hexadecimal characters prepended by '0x').
 #' @param api_key An Etherscan API key (see Details).
-#' @param internal Logical. Should normal (\code{FALSE}, default) or internal
-#'   (\code{TRUE}) transactions be queried?
-#' @param network Ethereum network to use. One of \code{'mainnet'} (default),
-#'   \code{ropsten}, \code{rinkeby}, \code{kovan}, or \code{goerli}.
+#' @param internal Logical. Should normal (`FALSE`, default) or internal
+#'   (`TRUE`) transactions be queried? _Deprecated. Please use `type` instead._
+#' @param type The type of transaction to query. One of `'normal'`,
+#'   `'internal'`, `'ERC20'`, or `'ERC721'`.
+#' @param network Ethereum network to use. One of `'mainnet'` (default),
+#'   `'ropsten'`, `'rinkeby'`, `'kovan'`, or `'goerli'`.
 #' @param no_errors Logical. Should unsuccessful transactions be omitted
-#'   (\code{FALSE}, default)?
-#' @return If \code{internal} is \code{FALSE}, a \code{tbl_df} with the
+#'   (`FALSE`, default)?
+#' @return If `internal` is `FALSE`, a `tbl_df` with the
 #'   following elements:
 #'  \itemize{
-#'    \item{\code{blockNumber (<dbl>)}}{}
-#'    \item{\code{timeStamp (<dttm>)}}{}
-#'    \item{\code{hash (<chr>)}}{}
-#'    \item{\code{nonce (<dbl>)}}{}
-#'    \item{\code{blockHash (<chr>)}}{}
-#'    \item{\code{transactionIndex (<dbl>)}}{}
-#'    \item{\code{from (<chr>)}}{}
-#'    \item{\code{to (<chr>)}}{}
-#'    \item{\code{value (<dbl>)}}{}
-#'    \item{\code{gas (<dbl>)}}{}
-#'    \item{\code{gasPrice (<dbl>)}}{}
-#'    \item{\code{isError (<dbl>)}}{}
-#'    \item{\code{txreceipt_status (<chr>)}}{}
-#'    \item{\code{input (<chr>)}}{}
-#'    \item{\code{contractAddress (<chr>)}}{}
+#'    \item{`blockNumber (<dbl>)`}{}
+#'    \item{`timeStamp (<dttm>)`}{}
+#'    \item{`hash (<chr>)`}{}
+#'    \item{`nonce (<dbl>)`}{}
+#'    \item{`blockHash (<chr>)`}{}
+#'    \item{`transactionIndex (<dbl>)`}{}
+#'    \item{`from (<chr>)`}{}
+#'    \item{`to (<chr>)`}{}
+#'    \item{`value (<dbl>)`}{}
+#'    \item{`gas (<dbl>)`}{}
+#'    \item{`gasPrice (<dbl>)`}{}
+#'    \item{`isError (<dbl>)`}{}
+#'    \item{`txreceipt_status (<chr>)`}{}
+#'    \item{`input (<chr>)`}{}
+#'    \item{`contractAddress (<chr>)`}{}
 #'  }
-#'  If \code{internal} is \code{TRUE}, a \code{tbl_df} with the following
+#'  If `internal` is `TRUE`, a `tbl_df` with the following
 #'  elements:
 #'  \itemize{
-#'    \item{\code{blockNumber (<dbl>)}}{}
-#'    \item{\code{timeStamp (<dttm>)}}{}
-#'    \item{\code{hash (<chr>)}}{}
-#'    \item{\code{from (<chr>)}}{}
-#'    \item{\code{to (<chr>)}}{}
-#'    \item{\code{value (<dbl>)}}{}
-#'    \item{\code{contractAddress (<chr>)}}{}
-#'    \item{\code{input (<chr>)}}{}
-#'    \item{\code{type (<chr>)}}{}
-#'    \item{\code{gas (<dbl>)}}{}
-#'    \item{\code{gasUsed (<dbl>)}}{}
-#'    \item{\code{traceId (<dbl>)}}{}
-#'    \item{\code{isError (<dbl>)}}{}
-#'    \item{\code{errCode (<chr>)}}{}
-#'    \item{\code{value_eth (<dbl>)}}{}
+#'    \item{`blockNumber (<dbl>)`}{}
+#'    \item{`timeStamp (<dttm>)`}{}
+#'    \item{`hash (<chr>)`}{}
+#'    \item{`from (<chr>)`}{}
+#'    \item{`to (<chr>)`}{}
+#'    \item{`value (<dbl>)`}{}
+#'    \item{`contractAddress (<chr>)`}{}
+#'    \item{`input (<chr>)`}{}
+#'    \item{`type (<chr>)`}{}
+#'    \item{`gas (<dbl>)`}{}
+#'    \item{`gasUsed (<dbl>)`}{}
+#'    \item{`traceId (<dbl>)`}{}
+#'    \item{`isError (<dbl>)`}{}
+#'    \item{`errCode (<chr>)`}{}
+#'    \item{`value_eth (<dbl>)`}{}
 #' }
-#' @details \code{get_txs} uses the Etherscan API to source information about
+#' @details `get_txs` uses the Etherscan API to source information about
 #'   transactions to and from an Ethereum address. Register for an API key at
-#'   the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
+#'   the [Etherscan Developer APIs page](https://etherscan.io/apis).
 #'   Note that a maximum of 10000 transactions are returned.
 #' @section Warning:
-#' As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer APIs are
-#' provided as a community service and without warranty, so please just use what
-#' you need and no more. They support both GET/POST requests and a rate limit of
-#' 5 requests/sec.}
+#' As per the Etherscan documentation, _the Etherscan Ethereum Developer APIs
+#' are provided as a community service and without warranty, so please just use
+#' what you need and no more. They support both GET/POST requests and a rate
+#' limit of 5 requests/sec._
 #' @keywords Ethereum, transaction, blockchain, cryptocurrency, crypto, ETH
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr filter as.tbl mutate %>%
 #' @export
-get_txs <- function(address, api_key, internal=FALSE, network='mainnet',
-                    no_errors=TRUE) {
+get_txs <- function(address, api_key, internal=FALSE,
+                    type=c('normal', 'internal', 'ERC20', 'ERC721'),
+                    network='mainnet', no_errors=TRUE) {
+  if (isTRUE(internal)) {
+    warning("argument `internal` is deprecated; please use `type` instead.",
+            call. = FALSE)
+    type <- 'internal'
+  } else {
+    type <- match.arg(type)
+  }
   address <- tolower(address)
-  if(missing(api_key)) api_key <- ''
+  if(missing(api_key)) stop('API Key required. See https://etherscan.io/apis')
   network <- match.arg(network, c('mainnet', 'ropsten', 'rinkeby', 'kovan', 'goerli'))
   network <- ifelse(network=='mainnet', '', paste0('-', network))
+  txtype <- switch(
+    type, normal='txlist', internal='txlistinternal',
+    ERC20='tokentx', ERC721='tokennfttx')
   j <- jsonlite::fromJSON(sprintf(
-    'http://api%s.etherscan.io/api?module=account&action=txlist%s&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s',
-    network, ifelse(isTRUE(internal), 'internal', ''), address, api_key))
+    'http://api%s.etherscan.io/api?module=account&action=%s&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s',
+    network, txtype, address, api_key))
   if(j$status != '1') {
     stop('Invalid address', call. = FALSE)
   }
-  j <- if(isTRUE(no_errors))
-    dplyr::filter_(j$result, ~ isError=='0') else j$result
-  if(isTRUE(internal)) {
-    j %>%
-      dplyr::mutate_(
-        timeStamp= ~ as.numeric(timeStamp),
-        timeStamp= ~ as.POSIXct(timeStamp, origin='1970-01-01'),
-        blockNumber= ~ as.numeric(blockNumber),
-        value= ~ as.numeric(value),
-        value_eth= ~ value/1e18,
-        gas= ~ as.numeric(gas),
-        isError= ~ as.numeric(isError),
-        gasUsed= ~ as.numeric(gasUsed)) %>%
-      dplyr::as.tbl()
-  } else {
-    j %>%
-      dplyr::mutate_(
-        timeStamp= ~ as.numeric(timeStamp),
-        timeStamp= ~ as.POSIXct(timeStamp, origin='1970-01-01'),
-        blockNumber= ~ as.numeric(blockNumber),
-        nonce= ~ as.numeric(nonce),
-        value= ~ as.numeric(value),
-        transactionIndex= ~ as.numeric(transactionIndex),
-        value_eth= ~ value/1e18,
-        gas= ~ as.numeric(gas),
-        gasPrice= ~ as.numeric(gasPrice),
-        gasPrice_gwei= ~ gasPrice/1e9,
-        isError= ~ as.numeric(isError),
-        cumulativeGasUsed= ~ as.numeric(cumulativeGasUsed),
-        gasUsed= ~ as.numeric(gasUsed),
-        confirmations= ~ as.numeric(confirmations)) %>%
-      dplyr::as.tbl()
-  }
+  j <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
+    dplyr::filter(j$result, isError=='0') else j$result
+  switch(type,
+         normal={
+           j %>%
+             dplyr::mutate(
+               timeStamp=as.numeric(timeStamp),
+               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+               blockNumber=as.numeric(blockNumber),
+               nonce=as.numeric(nonce),
+               value=as.numeric(value),
+               transactionIndex=as.numeric(transactionIndex),
+               value_eth=value/1e18,
+               gas=as.numeric(gas),
+               gasPrice=as.numeric(gasPrice),
+               gasPrice_gwei=gasPrice/1e9,
+               isError=as.numeric(isError),
+               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+               gasUsed=as.numeric(gasUsed),
+               confirmations=as.numeric(confirmations)
+             ) %>%
+             dplyr::as.tbl()
+         },
+         internal={
+           j %>%
+             dplyr::mutate(
+               timeStamp=as.numeric(timeStamp),
+               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+               blockNumber=as.numeric(blockNumber),
+               value=as.numeric(value),
+               value_eth=value/1e18,
+               gas=as.numeric(gas),
+               isError=as.numeric(isError),
+               gasUsed=as.numeric(gasUsed)
+             ) %>%
+             dplyr::as.tbl()
+         },
+         ERC20={
+           j %>%
+             dplyr::mutate(
+               timeStamp=as.numeric(timeStamp),
+               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+               blockNumber=as.numeric(blockNumber),
+               nonce=as.numeric(nonce),
+               tokenDecimal=as.numeric(tokenDecimal),
+               value=as.numeric(value)*10^-tokenDecimal,
+               transactionIndex=as.numeric(transactionIndex),
+               gas=as.numeric(gas),
+               gasPrice=as.numeric(gasPrice),
+               gasPrice_gwei=gasPrice/1e9,
+               gasUsed=as.numeric(gasUsed),
+               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+               confirmations=as.numeric(confirmations)
+             ) %>%
+             dplyr::as.tbl()
+         },
+         ERC721={
+           j %>%
+             dplyr::mutate(
+               timeStamp=as.numeric(timeStamp),
+               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+               blockNumber=as.numeric(blockNumber),
+               nonce=as.numeric(nonce),
+               tokenID=as.integer(tokenID),
+               tokenDecimal=as.numeric(tokenDecimal),
+               transactionIndex=as.numeric(transactionIndex),
+               gas=as.numeric(gas),
+               gasPrice=as.numeric(gasPrice),
+               gasPrice_gwei=gasPrice/1e9,
+               gasUsed=as.numeric(gasUsed),
+               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+               confirmations=as.numeric(confirmations)
+             ) %>%
+             dplyr::as.tbl()
+         }
+  )
 }

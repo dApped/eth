@@ -18,15 +18,15 @@ contracts are returned.}
 }
 \value{
 If \code{simple} is \code{TRUE}, a \code{tbl_df} containing details
-  (as per \code{\link{get_txs}}) of transactions that created contracts. If
-  \code{simple} is \code{FALSE}, a vector of contract addresses.
+(as per \code{\link[=get_txs]{get_txs()}}) of transactions that created contracts. If
+\code{simple} is \code{FALSE}, a vector of contract addresses.
 }
 \description{
 Return the addresses of all contracts created by an Ethereum address.
 }
 \details{
 \code{created} uses the Etherscan API. Register for an API key at
-  the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
+the \href{https://etherscan.io/apis}{\emph{Etherscan Developer APIs page}}.
 }
 \section{Warning}{
 

@@ -5,9 +5,10 @@
 \alias{eth_units}
 \title{Ether units}
 \format{
-A \code{tbl_df} with two columns: \itemize{
-  \item{\code{unit}}{: name of the unit}
-  \item{\code{value_wei}}{: value of the unit in wei}
+A \code{tbl_df} with two columns:
+\itemize{
+\item \code{unit}: name of the unit
+\item \code{value_wei}: value of the unit in wei
 }
 }
 \source{

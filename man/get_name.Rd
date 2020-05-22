@@ -18,8 +18,20 @@ The name of the contract.
 \description{
 Return the name of a verified contract.
 }
+\details{
+\code{get_abi} uses the Etherscan API. Register for an API key
+at the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
+}
+\section{Warning}{
+
+As per the Etherscan documentation, \emph{the Etherscan Ethereum Developer
+APIs are provided as a community service and without warranty, so please just
+use what you need and no more. They support both GET/POST requests and a rate
+limit of 5 requests/sec.}
+}
+
 \seealso{
-\code{\link{get_abi}}
+\code{\link[=get_abi]{get_abi()}}
 }
 \keyword{ETH}
 \keyword{Ethereum,}
