@@ -10,7 +10,9 @@ get_txs(
   internal = FALSE,
   type = c("normal", "internal", "ERC20", "ERC721"),
   network = "mainnet",
-  no_errors = TRUE
+  first_page = FALSE,
+  no_errors = TRUE,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -27,6 +29,9 @@ hexadecimal characters prepended by '0x').}
 
 \item{network}{Ethereum network to use. One of \code{'mainnet'} (default),
 \code{'ropsten'}, \code{'rinkeby'}, \code{'kovan'}, or \code{'goerli'}.}
+
+\item{first_page}{Logical. Should only the first page of results (up to
+10,000 transactions) be returned.}
 
 \item{no_errors}{Logical. Should unsuccessful transactions be omitted
 (\code{FALSE}, default)?}

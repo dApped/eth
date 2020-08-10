@@ -11,6 +11,8 @@
 #'   `'internal'`, `'ERC20'`, or `'ERC721'`.
 #' @param network Ethereum network to use. One of `'mainnet'` (default),
 #'   `'ropsten'`, `'rinkeby'`, `'kovan'`, or `'goerli'`.
+#' @param first_page Logical. Should only the first page of results (up to
+#'   10,000 transactions) be returned.
 #' @param no_errors Logical. Should unsuccessful transactions be omitted
 #'   (`FALSE`, default)?
 #' @return A `tbl_df` with transaction details. Columns vary depending on
@@ -26,11 +28,12 @@
 #' limit of 5 requests/sec._
 #' @keywords Ethereum, transaction, blockchain, cryptocurrency, crypto, ETH
 #' @importFrom jsonlite fromJSON
-#' @importFrom dplyr filter as.tbl mutate %>%
+#' @importFrom dplyr filter as_tibble mutate %>%
 #' @export
 get_txs <- function(address, api_key, internal=FALSE,
                     type=c('normal', 'internal', 'ERC20', 'ERC721'),
-                    network='mainnet', no_errors=TRUE) {
+                    network='mainnet', first_page=FALSE, no_errors=TRUE,
+                    quiet=FALSE) {
   if (isTRUE(internal)) {
     warning("argument `internal` is deprecated; please use `type` instead.",
             call. = FALSE)
@@ -45,86 +48,105 @@ get_txs <- function(address, api_key, internal=FALSE,
   txtype <- switch(
     type, normal='txlist', internal='txlistinternal',
     ERC20='tokentx', ERC721='tokennfttx')
-  j <- jsonlite::fromJSON(sprintf(
-    'http://api%s.etherscan.io/api?module=account&action=%s&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s',
-    network, txtype, address, api_key))
-  if(j$status != '1') {
-    stop('Invalid address', call. = FALSE)
+  .get_txs <- function(network, txtype, address, startblock, sort, api_key) {
+    j <- jsonlite::fromJSON(sprintf(
+      'http://api%s.etherscan.io/api?module=account&action=%s&address=%s&startblock=%s&endblock=99999999&sort=%s&apikey=%s',
+      network, txtype, address, startblock, sort, api_key))
+    if(j$status != '1') {
+      stop('Invalid address', call. = FALSE)
+    }
+    j <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
+      dplyr::filter(j$result, isError=='0') else j$result
+    switch(type,
+           normal={
+             j %>%
+               dplyr::mutate(
+                 timeStamp=as.numeric(timeStamp),
+                 timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+                 blockNumber=as.numeric(blockNumber),
+                 nonce=as.numeric(nonce),
+                 value=as.numeric(value),
+                 transactionIndex=as.numeric(transactionIndex),
+                 value_eth=value/1e18,
+                 gas=as.numeric(gas),
+                 gasPrice=as.numeric(gasPrice),
+                 gasPrice_gwei=gasPrice/1e9,
+                 isError=as.numeric(isError),
+                 cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+                 gasUsed=as.numeric(gasUsed),
+                 confirmations=as.numeric(confirmations)
+               ) %>%
+               dplyr::as_tibble()
+           },
+           internal={
+             j %>%
+               dplyr::mutate(
+                 timeStamp=as.numeric(timeStamp),
+                 timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+                 blockNumber=as.numeric(blockNumber),
+                 value=as.numeric(value),
+                 value_eth=value/1e18,
+                 gas=as.numeric(gas),
+                 isError=as.numeric(isError),
+                 gasUsed=as.numeric(gasUsed)
+               ) %>%
+               dplyr::as_tibble()
+           },
+           ERC20={
+             j %>%
+               dplyr::mutate(
+                 timeStamp=as.numeric(timeStamp),
+                 timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+                 blockNumber=as.numeric(blockNumber),
+                 nonce=as.numeric(nonce),
+                 tokenDecimal=as.numeric(tokenDecimal),
+                 value=as.numeric(value)*10^-tokenDecimal,
+                 transactionIndex=as.numeric(transactionIndex),
+                 gas=as.numeric(gas),
+                 gasPrice=as.numeric(gasPrice),
+                 gasPrice_gwei=gasPrice/1e9,
+                 gasUsed=as.numeric(gasUsed),
+                 cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+                 confirmations=as.numeric(confirmations)
+               ) %>%
+               dplyr::as_tibble()
+           },
+           ERC721={
+             j %>%
+               dplyr::mutate(
+                 timeStamp=as.numeric(timeStamp),
+                 timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
+                 blockNumber=as.numeric(blockNumber),
+                 nonce=as.numeric(nonce),
+                 tokenID=as.integer(tokenID),
+                 tokenDecimal=as.numeric(tokenDecimal),
+                 transactionIndex=as.numeric(transactionIndex),
+                 gas=as.numeric(gas),
+                 gasPrice=as.numeric(gasPrice),
+                 gasPrice_gwei=gasPrice/1e9,
+                 gasUsed=as.numeric(gasUsed),
+                 cumulativeGasUsed=as.numeric(cumulativeGasUsed),
+                 confirmations=as.numeric(confirmations)
+               ) %>%
+               dplyr::as_tibble()
+           }
+    )
   }
-  j <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
-    dplyr::filter(j$result, isError=='0') else j$result
-  switch(type,
-         normal={
-           j %>%
-             dplyr::mutate(
-               timeStamp=as.numeric(timeStamp),
-               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
-               blockNumber=as.numeric(blockNumber),
-               nonce=as.numeric(nonce),
-               value=as.numeric(value),
-               transactionIndex=as.numeric(transactionIndex),
-               value_eth=value/1e18,
-               gas=as.numeric(gas),
-               gasPrice=as.numeric(gasPrice),
-               gasPrice_gwei=gasPrice/1e9,
-               isError=as.numeric(isError),
-               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
-               gasUsed=as.numeric(gasUsed),
-               confirmations=as.numeric(confirmations)
-             ) %>%
-             dplyr::as.tbl()
-         },
-         internal={
-           j %>%
-             dplyr::mutate(
-               timeStamp=as.numeric(timeStamp),
-               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
-               blockNumber=as.numeric(blockNumber),
-               value=as.numeric(value),
-               value_eth=value/1e18,
-               gas=as.numeric(gas),
-               isError=as.numeric(isError),
-               gasUsed=as.numeric(gasUsed)
-             ) %>%
-             dplyr::as.tbl()
-         },
-         ERC20={
-           j %>%
-             dplyr::mutate(
-               timeStamp=as.numeric(timeStamp),
-               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
-               blockNumber=as.numeric(blockNumber),
-               nonce=as.numeric(nonce),
-               tokenDecimal=as.numeric(tokenDecimal),
-               value=as.numeric(value)*10^-tokenDecimal,
-               transactionIndex=as.numeric(transactionIndex),
-               gas=as.numeric(gas),
-               gasPrice=as.numeric(gasPrice),
-               gasPrice_gwei=gasPrice/1e9,
-               gasUsed=as.numeric(gasUsed),
-               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
-               confirmations=as.numeric(confirmations)
-             ) %>%
-             dplyr::as.tbl()
-         },
-         ERC721={
-           j %>%
-             dplyr::mutate(
-               timeStamp=as.numeric(timeStamp),
-               timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
-               blockNumber=as.numeric(blockNumber),
-               nonce=as.numeric(nonce),
-               tokenID=as.integer(tokenID),
-               tokenDecimal=as.numeric(tokenDecimal),
-               transactionIndex=as.numeric(transactionIndex),
-               gas=as.numeric(gas),
-               gasPrice=as.numeric(gasPrice),
-               gasPrice_gwei=gasPrice/1e9,
-               gasUsed=as.numeric(gasUsed),
-               cumulativeGasUsed=as.numeric(cumulativeGasUsed),
-               confirmations=as.numeric(confirmations)
-             ) %>%
-             dplyr::as.tbl()
-         }
-  )
+
+  if(isTRUE(first_page)) {
+    if(!quiet) message('Getting transactions...')
+    txs <- .get_txs(network=network, txtype=txtype, address=address,
+                    startblock=0, sort='desc', api_key=key)
+  } else {
+    if(!quiet) message('Getting transactions...')
+    txs <- .get_txs(network, txtype, address, 0, 'asc', key)
+    n <- nrow(txs)
+    while(n == 10000) {
+      if(!quiet) message('Getting more transactions...')
+      txs <- rbind(txs, .get_txs(network, txtype, address, max(txs$blockNumber),
+                                 'asc', key))
+      n <- nrow(txs) - n
+    }
+  }
+  return(txs)
 }
