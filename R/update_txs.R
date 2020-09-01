@@ -1,23 +1,11 @@
-#' Get transactions for an address
+#' Update transactions for an address
 #'
-#' Get normal, internal, ERC-20, or ERC-721 transactions for an Ethereum address.
+#' Update normal, internal, ERC-20, or ERC-721 transactions for an Ethereum
+#' address.
 #'
-#' @param address Character. A single ethereum address as a character string (40
-#'   hexadecimal characters prepended by '0x').
+#' @param txs An object returned by [get_txs()].
 #' @param api_key An Etherscan API key (see Details).
-#' @param internal Logical. Should normal (`FALSE`, default) or internal
-#'   (`TRUE`) transactions be queried? _Deprecated. Please use `type` instead._
-#' @param type The type of transaction to query. One of `'normal'`,
-#'   `'internal'`, `'ERC20'`, or `'ERC721'`.
-#' @param network Ethereum network to use. One of `'mainnet'` (default),
-#'   `'ropsten'`, `'rinkeby'`, `'kovan'`, or `'goerli'`.
-#' @param first_page Logical. Should only the first page of results (up to
-#'   10,000 transactions) be returned.
-#' @param no_errors Logical. Should unsuccessful transactions be omitted
-#'   (`FALSE`, default)?
 #' @param quiet Logical. Suppress messages? Default is `FALSE`.
-#' @return A `tbl_df` with transaction details. Columns vary depending on
-#'   `type`.
 #' @details `get_txs` uses the Etherscan API to source information about
 #'   transactions to and from an Ethereum address. Register for an API key at
 #'   the [Etherscan Developer APIs page](https://etherscan.io/apis).
@@ -31,25 +19,18 @@
 #' @importFrom dplyr filter as_tibble mutate distinct select %>%
 #' @importFrom lubridate with_tz now
 #' @export
-get_txs <- function(address, api_key, internal=FALSE,
-                    type=c('normal', 'internal', 'ERC20', 'ERC721'),
-                    network='mainnet', first_page=FALSE, no_errors=TRUE,
-                    quiet=FALSE) {
-  if (isTRUE(internal)) {
-    warning("argument `internal` is deprecated; please use `type` instead.",
-            call. = FALSE)
-    type <- 'internal'
-  } else {
-    type <- match.arg(type)
-  }
-  address <- tolower(address)
+update_txs <- function(txs, api_key, quiet=FALSE) {
   if(missing(api_key)) stop('API Key required. See https://etherscan.io/apis')
-  network <- match.arg(network, c('mainnet', 'ropsten', 'rinkeby', 'kovan', 'goerli'))
-  config <- list(address=address, type=type, network=network, no_errors=no_errors)
+  address <- attr(txs, 'address')
+  network <- attr(txs, 'network')
   network <- ifelse(network=='mainnet', '', paste0('-', network))
+  no_errors <- attr(txs, 'no_errors')
+  type <- attr(txs, 'type')
+
   txtype <- switch(
     type, normal='txlist', internal='txlistinternal',
     ERC20='tokentx', ERC721='tokennfttx')
+
   .get_txs <- function(network, txtype, address, startblock, sort, api_key) {
     j <- jsonlite::fromJSON(sprintf(
       'http://api%s.etherscan.io/api?module=account&action=%s&address=%s&startblock=%s&endblock=99999999&sort=%s&apikey=%s',
@@ -136,30 +117,20 @@ get_txs <- function(address, api_key, internal=FALSE,
       dplyr::mutate(timeStamp=lubridate::with_tz(timeStamp, 'UTC'))
   }
 
-  if(isTRUE(first_page)) {
-    if(!quiet) message('Getting transactions...')
-    txs <- .get_txs(network=network, txtype=txtype, address=address,
-                    startblock=0, sort='desc', api_key=api_key) %>%
+  if(!quiet) message('Getting transactions...')
+  .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
+    dplyr::select(-confirmations)
+  n <- nrow(.txs)
+  txs <- rbind(txs, .txs)
+  while(n == 10000) {
+    if(!quiet) message('Getting more transactions...')
+    .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
       dplyr::select(-confirmations)
-  } else {
-    if(!quiet) message('Getting transactions...')
-    txs <- .get_txs(network, txtype, address, 0, 'asc', api_key) %>%
-      dplyr::select(-confirmations)
-    n <- nrow(txs)
-    while(n == 10000) {
-      if(!quiet) message('Getting more transactions...')
-      .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
-        dplyr::select(-confirmations)
-      n <- nrow(.txs)
-      txs <- rbind(txs, .txs)
-    }
+    n <- nrow(.txs)
+    txs <- rbind(txs, .txs)
   }
   now <- lubridate::now(tzone='UTC')
   txs <- txs %>% dplyr::distinct()
-  attr(txs, 'address') <- config$address
-  attr(txs, 'type') <- config$type
-  attr(txs, 'network') <- config$network
-  attr(txs, 'no_errors') <- config$no_errors
   attr(txs, 'last_updated') <- now
   txs
 }

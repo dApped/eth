@@ -35,6 +35,8 @@ hexadecimal characters prepended by '0x').}
 
 \item{no_errors}{Logical. Should unsuccessful transactions be omitted
 (\code{FALSE}, default)?}
+
+\item{quiet}{Logical. Suppress messages? Default is \code{FALSE}.}
 }
 \value{
 A \code{tbl_df} with transaction details. Columns vary depending on
@@ -47,7 +49,6 @@ Get normal, internal, ERC-20, or ERC-721 transactions for an Ethereum address.
 \code{get_txs} uses the Etherscan API to source information about
 transactions to and from an Ethereum address. Register for an API key at
 the \href{https://etherscan.io/apis}{Etherscan Developer APIs page}.
-Note that a maximum of 10000 transactions are returned.
 }
 \section{Warning}{
 
