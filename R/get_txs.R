@@ -28,7 +28,7 @@
 #' limit of 5 requests/sec._
 #' @keywords Ethereum, transaction, blockchain, cryptocurrency, crypto, ETH
 #' @importFrom jsonlite fromJSON
-#' @importFrom dplyr filter as_tibble mutate distinct select %>%
+#' @importFrom dplyr filter as_tibble mutate distinct select matches %>%
 #' @importFrom lubridate with_tz now
 #' @export
 get_txs <- function(address, api_key, internal=FALSE,
@@ -57,8 +57,7 @@ get_txs <- function(address, api_key, internal=FALSE,
     if(j$status != '1') {
       stop('Invalid address', call. = FALSE)
     }
-    j <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
-      dplyr::filter(j$result, isError=='0') else j$result
+    j <- j$result
     switch(type,
            normal={
              j %>%
@@ -140,22 +139,24 @@ get_txs <- function(address, api_key, internal=FALSE,
     if(!quiet) message('Getting transactions...')
     txs <- .get_txs(network=network, txtype=txtype, address=address,
                     startblock=0, sort='desc', api_key=api_key) %>%
-      dplyr::select(-confirmations)
+      dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
   } else {
     if(!quiet) message('Getting transactions...')
     txs <- .get_txs(network, txtype, address, 0, 'asc', api_key) %>%
-      dplyr::select(-confirmations)
+      dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
     n <- nrow(txs)
     while(n == 10000) {
       if(!quiet) message('Getting more transactions...')
       .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
-        dplyr::select(-confirmations)
+        dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
       n <- nrow(.txs)
       txs <- rbind(txs, .txs)
     }
   }
   now <- lubridate::now(tzone='UTC')
   txs <- txs %>% dplyr::distinct()
+  txs <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
+    dplyr::filter(txs, isError=='0')
   attr(txs, 'address') <- config$address
   attr(txs, 'type') <- config$type
   attr(txs, 'network') <- config$network

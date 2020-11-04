@@ -16,7 +16,7 @@
 #' limit of 5 requests/sec._
 #' @keywords Ethereum, transaction, blockchain, cryptocurrency, crypto, ETH
 #' @importFrom jsonlite fromJSON
-#' @importFrom dplyr filter as_tibble mutate distinct select %>%
+#' @importFrom dplyr filter as_tibble mutate distinct select matches %>%
 #' @importFrom lubridate with_tz now
 #' @export
 update_txs <- function(txs, api_key, quiet=FALSE) {
@@ -119,13 +119,13 @@ update_txs <- function(txs, api_key, quiet=FALSE) {
 
   if(!quiet) message('Getting transactions...')
   .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
-    dplyr::select(-confirmations)
+    dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
   n <- nrow(.txs)
   txs <- rbind(txs, .txs)
   while(n == 10000) {
     if(!quiet) message('Getting more transactions...')
     .txs <- .get_txs(network, txtype, address, max(txs$blockNumber), 'asc', api_key) %>%
-      dplyr::select(-confirmations)
+      dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
     n <- nrow(.txs)
     txs <- rbind(txs, .txs)
   }
