@@ -155,8 +155,8 @@ get_txs <- function(address, api_key, internal=FALSE,
   }
   now <- lubridate::now(tzone='UTC')
   txs <- txs %>% dplyr::distinct()
-  txs <- if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
-    dplyr::filter(txs, isError=='0')
+  if(isTRUE(no_errors) && type %in% c('normal', 'internal'))
+    txs <- dplyr::filter(txs, isError=='0')
   attr(txs, 'address') <- config$address
   attr(txs, 'type') <- config$type
   attr(txs, 'network') <- config$network
