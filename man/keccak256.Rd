@@ -4,13 +4,16 @@
 \alias{keccak256}
 \title{Return the Keccak-256 hash for a string}
 \usage{
-keccak256(x, truncate = TRUE)
+keccak256(x, truncate = TRUE, prepend_0x = FALSE)
 }
 \arguments{
 \item{x}{Character. The string to hash.}
 
 \item{truncate}{Logical. Truncate the hash to the first 4 bytes (8
 characters)?}
+
+\item{prepend_0x}{Logical. Should the hash be prepended with 0x? Default =
+\code{FALSE}.}
 }
 \value{
 Character. The hash of \code{x}, truncated to 8 characters if

@@ -5,6 +5,8 @@
 #' @param x Character. The string to hash.
 #' @param truncate Logical. Truncate the hash to the first 4 bytes (8
 #'   characters)?
+#' @param prepend_0x Logical. Should the hash be prepended with 0x? Default =
+#'   `FALSE`.
 #' @return Character. The hash of `x`, truncated to 8 characters if
 #'   `truncate` is `TRUE`.
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
@@ -13,10 +15,10 @@
 #'   Chen. This is licensed under MIT.
 #' @importFrom V8 v8
 #' @export
-keccak256 <- function(x, truncate=TRUE) {
+keccak256 <- function(x, truncate=TRUE, prepend_0x=FALSE) {
   ct <- v8(global='window')
   ct$source(system.file('js', 'sha3.min.js', package='eth'))
-  sapply(x, function(x) {
+  hash <- sapply(x, function(x) {
     if(is.na(x)) {
       NA
     } else {
@@ -24,4 +26,5 @@ keccak256 <- function(x, truncate=TRUE) {
       if(isTRUE(truncate)) substr(x, 1, 8) else x
     }
   })
+  if(isTRUE(prepend_0x)) paste0('0x', hash) else hash
 }
