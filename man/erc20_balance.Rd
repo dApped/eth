@@ -18,7 +18,7 @@ Default = \code{'latest'}.}
 \item{quiet}{Logical. Suppress progress messages? Default = \code{FALSE}.}
 }
 \description{
-Get event logs for a given contract address and topic
+Get ERC20 token balance for a specific token, at a specific block.
 }
 \section{Warning}{
 

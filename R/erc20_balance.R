@@ -1,6 +1,6 @@
 #' Get ERC20 token balances
 #'
-#' Get event logs for a given contract address and topic
+#' Get ERC20 token balance for a specific token, at a specific block.
 #'
 #' @param address Character. A single Ethereum contract address as a character
 #'   string (40 hexadecimal characters prepended by '0x').

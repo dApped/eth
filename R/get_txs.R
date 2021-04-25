@@ -30,7 +30,7 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr filter as_tibble mutate distinct select matches %>%
 #' @importFrom lubridate with_tz now
-#' @importFrom Rmpfr mpfr
+#' @importFrom gmp as.bigz
 #' @export
 get_txs <- function(address, api_key, internal=FALSE,
                     type=c('normal', 'internal', 'ERC20', 'ERC721'),
@@ -95,14 +95,13 @@ get_txs <- function(address, api_key, internal=FALSE,
                dplyr::as_tibble()
            },
            ERC20={
-             j %>%
+             d <- j %>%
                dplyr::mutate(
                  timeStamp=as.numeric(timeStamp),
                  timeStamp=as.POSIXct(timeStamp, origin='1970-01-01'),
                  blockNumber=as.numeric(blockNumber),
                  nonce=as.numeric(nonce),
                  tokenDecimal=as.numeric(tokenDecimal),
-                 value=as(Rmpfr::mpfr(value, 64)*10^-tokenDecimal, 'numeric'),
                  transactionIndex=as.numeric(transactionIndex),
                  gas=as.numeric(gas),
                  gasPrice=as.numeric(gasPrice),
@@ -112,6 +111,8 @@ get_txs <- function(address, api_key, internal=FALSE,
                  confirmations=as.numeric(confirmations)
                ) %>%
                dplyr::as_tibble()
+             d$value <- gmp::as.bigz(d$value)
+             d
            },
            ERC721={
              j %>%
