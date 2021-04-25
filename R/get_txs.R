@@ -109,10 +109,9 @@ get_txs <- function(address, api_key, internal=FALSE,
                  gasUsed=as.numeric(gasUsed),
                  cumulativeGasUsed=as.numeric(cumulativeGasUsed),
                  confirmations=as.numeric(confirmations)
-               ) %>%
-               dplyr::as_tibble()
+               )
              d$value <- gmp::as.bigz(d$value)
-             d
+             dplyr::as_tibble(d)
            },
            ERC721={
              j %>%
