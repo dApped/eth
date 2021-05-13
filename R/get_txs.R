@@ -56,7 +56,12 @@ get_txs <- function(address, api_key, internal=FALSE,
       'http://api%s.etherscan.io/api?module=account&action=%s&address=%s&startblock=%s&endblock=99999999&sort=%s&apikey=%s',
       network, txtype, address, startblock, sort, api_key))
     if(j$status != '1') {
-      stop('Invalid address', call. = FALSE)
+      if(j$message == 'No transactions found') {
+        warning('No transactions found for address: ', address)
+        return(NULL)
+      } else {
+        stop('Invalid address', call. = FALSE)
+      }
     }
     j <- j$result
     switch(type,
