@@ -57,7 +57,7 @@ get_txs <- function(address, api_key, internal=FALSE,
       network, txtype, address, startblock, sort, api_key))
     if(j$status != '1') {
       if(j$message == 'No transactions found') {
-        warning('No transactions found for address: ', address)
+        warning('No transactions found for address: ', address, call.=FALSE)
         return(NULL)
       } else {
         stop('Invalid address', call. = FALSE)
@@ -144,12 +144,14 @@ get_txs <- function(address, api_key, internal=FALSE,
   if(isTRUE(first_page)) {
     if(!quiet) message('Getting transactions...')
     txs <- .get_txs(network=network, txtype=txtype, address=address,
-                    startblock=0, sort='desc', api_key=api_key) %>%
-      dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
+                    startblock=0, sort='desc', api_key=api_key)
+    if(is.null(txs)) return(NULL)
+    txs <- dplyr::select(txs, dplyr::matches('^((?!confirmations).)*$', perl=T))
   } else {
     if(!quiet) message('Getting transactions...')
-    txs <- .get_txs(network, txtype, address, 0, 'asc', api_key) %>%
-      dplyr::select(dplyr::matches('^((?!confirmations).)*$', perl=T))
+    txs <- .get_txs(network, txtype, address, 0, 'asc', api_key)
+    if(is.null(txs)) return(NULL)
+    txs <- dplyr::select(txs, dplyr::matches('^((?!confirmations).)*$', perl=T))
     n <- nrow(txs)
     while(n == 10000) {
       if(!quiet) message('Getting more transactions...')
