@@ -36,8 +36,7 @@ get_name <- function(address, api_key) {
   # Faster but less robust
   h <- xml2::read_html(
     sprintf('https://etherscan.io/address/%s#code', address))
-  rvest::html_node(
-    h, css='#ContentPlaceHolder1_contractCodeDiv > div:nth-child(2) > table > tr:nth-child(1) > td:nth-child(2)') %>%
+  rvest::html_node(h, xpath = '//*[@id="ContentPlaceHolder1_contractCodeDiv"]/div[2]/div[1]/div[1]/div[2]/span') %>%
     rvest::html_text() %>%
-    gsub('\\n', '', .)
+    gsub("\\n", "", .)
 }
