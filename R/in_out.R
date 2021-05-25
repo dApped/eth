@@ -8,7 +8,6 @@
 #' @param get_names Logical. Get contract names for verified contracts?
 #' @return A summary of inflow and outflow of ETH from an address.
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
-#' @seealso [get_abi()]
 #' @importFrom dplyr bind_rows select filter group_by summarise mutate across arrange desc %>%
 #' @importFrom tidyr pivot_wider
 #' @export
