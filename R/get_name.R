@@ -15,28 +15,27 @@
 #' limit of 5 requests/sec._
 #' @keywords Ethereum, contract, blockchain, cryptocurrency, crypto, ETH
 #' @seealso [get_abi()]
-#' @importFrom jsonlite prettify
-#' @importFrom rvest html_node html_text
-#' @importFrom xml2 read_html
+#' @importFrom crul HttpRequest AsyncQueue
+#' @importFrom jsonlite fromJSON
 #' @export
 get_name <- function(address, api_key) {
   address <- tolower(address)
-  if(missing(api_key)) api_key <- ''
-  if(!is_verified(address)) stop('Contract is not verified.')
+  if(missing(api_key)) {
+    api_key <- ''
+    warning('No API key provided. Rate limited to 1 request per 5 seconds.')
+  }
+  urls <- sprintf(
+    'http://api.etherscan.io/api?module=contract&action=getsourcecode&address=%s&apikey=%s',
+    address, api_key)
+  reqs <- lapply(urls, function(u) crul::HttpRequest$new(u)$get())
+  if(api_key == '') {
+    out <- crul::AsyncQueue$new(.list = reqs, bucket_size = 1, sleep = 5)
+  } else {
+    out <- crul::AsyncQueue$new(.list = reqs, bucket_size = 5, sleep = 1)
+  }
+  out$request()
+  results <- lapply(out$responses(), function(x) jsonlite::fromJSON(x$parse('UTF-8')))
+  contract_names <- sapply(results, function(x) x$result$ContractName)
 
-  # u <- sprintf(
-  #   'http://api.etherscan.io/api?module=contract&action=getsourcecode&address=%s&apikey=%s',
-  #   address, api_key)
-  # j <- jsonlite::fromJSON(u)
-  # if(j$status != '1') {
-  #   stop('Invalid address', call. = FALSE)
-  # }
-  # j$result$ContractName
-
-  # Faster but less robust
-  h <- xml2::read_html(
-    sprintf('https://etherscan.io/address/%s#code', address))
-  rvest::html_node(h, xpath = '//*[@id="ContentPlaceHolder1_contractCodeDiv"]/div[2]/div[1]/div[1]/div[2]/span') %>%
-    rvest::html_text() %>%
-    gsub("\\n", "", .)
+  contract_names
 }
