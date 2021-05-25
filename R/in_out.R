@@ -28,7 +28,8 @@ in_out <- function(address, api_key, get_names=FALSE) {
     dplyr::summarise(value=sum(value_eth), .groups='drop') %>%
     tidyr::pivot_wider(names_from=direction, values_from=value) %>%
     dplyr::mutate(dplyr::across(eth_in:eth_out, ~ifelse(is.na(.x), 0, .x)),
-                  net=eth_in - eth_out) %>%
+                  net=eth_in - eth_out,
+                  roi_pct=eth_in/eth_out*100) %>%
     dplyr::arrange(dplyr::desc(net))
 
   if(isTRUE(get_names)) flow$name <- get_name(flow$address, api_key)
